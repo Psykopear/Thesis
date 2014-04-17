@@ -1,8 +1,32 @@
-\documentclass{article}
-\title{Thesis}
+\documentclass{report}
+\usepackage[utf8]{inputenc}
+\begin{document}
+\frontmatter
+\title{Soluzione di problemi di direction finding con l'utilizzo di un algoritmo di posizionamento ad ancora singola}
 \author{Federico Dolce}
 \date{May 2014}
-\begin{document}
-	\maketitle
-	Tesi yeah!
+\maketitle
+\begin{abstract}
+Riassunto del cazzo
+\end{abstract}
+\tableofcontents
+\mainmatter
+
+\chapter{Problemi di direction finding}
+	\input{capitoli/capitolo01}
+
+\chapter{Soluzione del problema con algoritmo di posizionamento ad ancora singola}
+	\input{capitoli/capitolo02}
+
+
+\chapter{Implementazione agente di ricerca}
+	\input{capitoli/capitolo03}
+
+\chapter{Conclusioni}
+	\input{capitoli/conclusioni}
+
+\appendix
+\chapter{Allegati}
+	\input{capitoli/allegati}
+	
 \end{document}
