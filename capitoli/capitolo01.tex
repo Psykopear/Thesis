@@ -1,7 +1,22 @@
-\section{Introduzione dei problemi di direction finding}
-Testo di questo capitolo
+\section{Introduzione dei problemi di direction-finding}
 
-\section{Risoluzione del problema con due riceventi}
+In letteratura è presente un vasto assortimento di algoritmi e sistemi per la soluzione di problemi di DF. Introdurrò qui il problema,
+senza entrare nel dettaglio delle singole soluzioni proposte, per poi presentare un approccio differente per la risoluzione dello stesso.
+
+Dato un agente che riceve un segnale da più antenne trasmettitrici, il problema del DF è quello di stabilire la direzione di arrivo,
+ovvero la direzione da cui il segnale stesso è generato (nel caso di antenne multiple, una posizione in qualche modo vicina a queste).
+
+Gli algoritmi di DF sono di solito classificati dal numero di riceventi utilizzate. Quelli che utilizzano due o più riceventi, e quelli
+a ricevente singola, mobile. Possono essere classificati anche a seconda del metodo di trattamento del segnale, ovvero approcci basati
+sull'ampiezza del segnale, sulla sua fase, o su entrambe. 
+
+I sistemi basati sull'ampiezza comparano l'ampiezza del segnale ricevuto dalle varie antenne per calcolare la posizione nel piano da cui
+il segnale è generato.
+
+Quelli basati sulla fase determinano la direzione di arrivo traendo informazione dalla fase assoluta, o dalla differenza delle fasi, dei 
+segnali ricevuti dalle riceventi.
+
+\section{Risoluzione del problema con riceventi multiple}
 Testo ancora
 
 \section{Risoluzione del problema con una ricevente mobile}
