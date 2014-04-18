@@ -1,8 +1,18 @@
 \section{Problemi di posizionamento con l'utilizzo di ancore multiple}
-	spiego cose
+Il problema del posizionamento consiste nello stabilire la posizione relativa di una serie di "ancore", ovvero trasmittenti di segnale, rispetto ad una ricevente che si trova nello spazio coperto dal segnale delle ancore, o fra le stesse. 
+
+Per risolvere questo problema si utilizzano algoritmi e sistemi basati su reti di sensori che comunicano uno con l'altro scambiandosi informazioni riguardo l'ambiente in cui si trovano. Grazie a queste è possibile stabilire la posizione di ogni nodo rispetto agli altri, e raccogliere dati su un ambiente al fine di descriverlo.
+
+Al fine di "posizionare" le varie ancore nello spazio, si possono usare diversi tipi di misurazioni, come il tempo di arrivo del segnale, l'angolo di arrivo, misurazioni della fase, o la potenza del segnale ricevuto. Ognuna di queste tecniche può essere usata allo scopo, la differenza è nel tipo di tecnologie usate, nel costo dell'attrezzatura necessaria, nella richiesta di energia e ovviamente nell'accuratezza del risultato finale.
+
+In genere è richiesto l'utilizzo di almeno 4 nodi in uno spazio tridimensionale, per avere un'accuratezza sufficente del posizionamento di un oggetto in una posizione non nota dello spazio di riferimento. 
 	
 \section{Posizionamento ad ancora singola}
-	spiego altre cose
+L'idea è quella di permettere di capire la posizione di una singola ancora sorgente, attraverso una ricevente mobile che effettui misurazioni ad ogni passo svolto nello spazio. La misurazione utilizzata sarà quella della potenza di un segnale, che possa essere utilizzata come metro di riferimento della distanza dalla sorgente, in campo aperto, in quanto con ostacoli fisici nel percorso verrebbe falsato il dato di misurazione, e per risolvere questo tipo di problema è conveniente utilizzare tecniche differenti. 
+Il vantaggio di questo approccio è sicuramente il basso costo dei componenti, in quanto è necessario una singola ricevente e un singolo trasmettitore, che deve solo trasmettere un segnale che vari di potenza al variare della distanza, senza bisogno di ulteriori sensori o costosi apprecchi in grado di rilevare il tempo di ricezione con un errore di pochi milionesimi di secondo (nel caso di distanze relativamente brevi).
 	
 \section{Risoluzione di problemi di direction finding con il metodo di posizionamento ad ancora singola}
-	Ancora a spiegare cose
+Il problema da affrontare è quindi la scelta della direzione in cui far muovere l'agente per permettere di raggiungere la posizione della sorgente nel minor numero possibile di passi. 
+Il problema verrà risolto utilizzando un approccio geometrico, rappresentando il mondo come una matrice di punti, e la rilevazione della potenza del segnale come la distanza euclidea del punto nella matrice dal punto in cui si trova la sorgente
+
+Con il sistema sviluppato si cerca quindi di permettere la localizzazione di un punto nello spazio attraverso un agente libero di muoversi all'interno di esso, che può rilevare il valore, che per semplicità diremo della distanza dalla sorgente (in quanto si porrà la distanza fra i due punti come funzione della potenza del segnale), solo dopo essersi spostato dalla posizione originaria. L'indice della qualità del processo di localizzazione sarà quindi il numero di spostamenti effettuati dall'agente prima di raggiungere la posizione della sorgente.
