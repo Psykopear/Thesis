@@ -1,8 +1,34 @@
-\section{Informazione imperfetta}
-	Dico cose
-	
+La situazione che inizialmente si è posta è stata quella di permettere ad un mezzo autonomo (ovvero in grado di operare senza azione esterna), ad esempio un robot dotato di ruote, o un multirotore, di raggiungere una postazione in grado di emettere un segnale. È stato quindi deciso di risolvere il problema primario, ovvero un algoritmo in grado di eseguire i passi necessari in un mondo simulato.
+
+
+
+
+\section{Ricerca e informazione imperfetta}
+L'agente che risolve il problema deve massimizzare la misura della prestazione, quindi per prima cosa è necessario fissare un obiettivo. Il compito dell'agente sarà quindi quello di trovare una sequenza di azioni che portano al raggiungimento di uno stato obiettivo. Fondamentale nel permettere di sviluppare una sequenza di scelte adeguate, è la fase di astrazione del problema, fatta per semplificare le condizioni in cui si è sviluppato l'algoritmo, prescindendo da problemi di carattere pratico, eliminando le problematiche di ingegnerizzazione. Un'astrazione è valida se possiamo espandere ogni soluzione astratta in una soluzione nel mondo dettagliato; l'utilità è quindi quella di rendere più facile l'esecuzione delle azioni nel mondo astratto rispetto a quello originale. 
+La formulazione del problema è il processo che porta a decidere, dato un obiettivo, quali azioni e stati considerare. La considerazione degli stati è strettamente legata alle informazioni che l'agente dispone e che se non avesse non potrebbe fare altro che scegliere a caso. In generale un agente che ha a disposizione diverse opzioni immediate di valore sconosciuto, può decidere cosa fare esaminando diverse possibili sequenze di azioni che portano a stati di valore conosciuto, scegliendo quindi la sequenza migliore. Questo processo di selezione è detto ricerca, la cui implementazione ha come input un problema e restituisce la soluzione sotto forma di sequenza di azioni. La fase in cui l'agente svolge le azioni è detta esecuzione.
+Nel problema analizzato l'agente dispone di informazioni limitate sullo stato del mondo, in quanto quest'ultimo non è completamente conosciuto dall'agente. È stato quindi necessario sviluppare una tecnica apposita, in quanto non si sarebbe potuto utilizzare un algoritmo classico di ricerca informata, quali l'A* o algoritmi greedy, perchè questi ultimi necessitano di informazione completa sugli stati del mondo, e non sarebbe stato conveniente utilizzare un algoritmo di ricerca completamente non informata, perchè non si sarebbe sfruttata l'informazione sugli stati in cui man mano l'agente si trova.
+
+
 \section{Definizione delle componenti}
-	Scrivo che
+Le componenti che definiscono il mondo simulato sono:
+
+-Mondo
+
+-Agente
+
+-Knowledge Base (KB)
+
+-Gioco
+
+
+Il mondo è rappresentato sotto forma di matrice di dimensioni nxn, con un punto di coordinate (x, y) che rappresenta lo stato-obiettivo, in cui è memorizzato un valore numerico negativo, mentre in tutti gli altri punti viene memorizzato un valore float che indica la distanza euclidea del punto in cui il valore è memorizzato dal punto (x, y). Ad esempio nel punto (x+1, y) sarà memorizzato il valore "1.000", nel punto (X+1, Y+1) il valore "1.414", nel punto (X, Y) il valore "-1". In questo modo l'agente è in grado di sapere quando l'obiettivo è stato raggiunto, in quanto l'unico valore negativo nella matrice sarà quello del punto di arrivo.
+
+L'agente è rappresentato da una classe, chiamata "Drone", che nel momento in cui viene istanziata inizializza le componenti necessarie a memorizzare le informazioni necessarie alla ricerca, il metodo che permette l'effettivo spostamente sul mondo, ed il metodo per l'acquisizione delle misurazioni provenienti dal mondo
+
+Il KB sono le informazioni che il l'agente memorizza riguardo il mondo, ed è stato sviluppato sotto forma di grafo, che si va a riempire mano a mano che l'agente esegue i passi, che ha quindi un numero di nodi al massimo pari al numero di passi eseguiti per raggiungere l'obiettivo. Per ottimizzare l'utilizzo di memoria, è stata aggiunta la possibilità di limitare il numero di nodi memorizzati nel grafo ad un intero N, con una perdita in termini di prestazioni variabile, ma che permette un buon compromesso per determinati valori di N.
+
+Il gioco è la definizione della sequenza in cui svolgere le azioni per la simulazione: si inizializzano l'agente, il mondo ed il knowledge. Dopodichè, in un ciclo che finisce quando l'agente ha raggiunto l'obiettivo, o quando il valore "fuel" del Drone arriva a 0, si seleziona il Drone da un array, si chiama la funzione di probe del drone, per permettergli di misurare la propria distanza dal punto di arrivo, si assegnano a due variabili x ed y il rirultato dell'esecuzione dell'algoritmo di ricerca vero e proprio, e poi si chiama la funzione di movimento del drone con parametri queste due variabili. Alla fine del ciclo si aumento il contatore dei passi svolti, si controlla se il drone è arrivato a destinazione, se non lo è il ciclo ricomincia, altrimenti viene annunciato il successo.
+
 	
 \section{Architetture software}
 	Parlo di
