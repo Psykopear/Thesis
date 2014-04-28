@@ -20,18 +20,43 @@ Le componenti che definiscono il mondo simulato sono:
 
 -Gioco
 
-
+\subsection{Mondo}
 Il mondo è rappresentato sotto forma di matrice di dimensioni nxn, con un punto di coordinate (x, y) che rappresenta lo stato-obiettivo, in cui è memorizzato un valore numerico negativo, mentre in tutti gli altri punti viene memorizzato un valore float che indica la distanza euclidea del punto in cui il valore è memorizzato dal punto (x, y). Ad esempio nel punto (x+1, y) sarà memorizzato il valore "1.000", nel punto (X+1, Y+1) il valore "1.414", nel punto (X, Y) il valore "-1". In questo modo l'agente è in grado di sapere quando l'obiettivo è stato raggiunto, in quanto l'unico valore negativo nella matrice sarà quello del punto di arrivo.
-
+\subsection{Agente}
 L'agente è rappresentato da una classe, chiamata "Drone", che nel momento in cui viene istanziata inizializza le componenti necessarie a memorizzare le informazioni necessarie alla ricerca, il metodo che permette l'effettivo spostamente sul mondo, ed il metodo per l'acquisizione delle misurazioni provenienti dal mondo
-
+\subsection{Knowledge Base (KB)}
 Il KB sono le informazioni che il l'agente memorizza riguardo il mondo, ed è stato sviluppato sotto forma di grafo, che si va a riempire mano a mano che l'agente esegue i passi, che ha quindi un numero di nodi al massimo pari al numero di passi eseguiti per raggiungere l'obiettivo. Per ottimizzare l'utilizzo di memoria, è stata aggiunta la possibilità di limitare il numero di nodi memorizzati nel grafo ad un intero N, con una perdita in termini di prestazioni variabile, ma che permette un buon compromesso per determinati valori di N.
-
+\subsection{Gioco}
 Il gioco è la definizione della sequenza in cui svolgere le azioni per la simulazione: si inizializzano l'agente, il mondo ed il knowledge. Dopodichè, in un ciclo che finisce quando l'agente ha raggiunto l'obiettivo, o quando il valore "fuel" del Drone arriva a 0, si seleziona il Drone da un array, si chiama la funzione di probe del drone, per permettergli di misurare la propria distanza dal punto di arrivo, si assegnano a due variabili x ed y il rirultato dell'esecuzione dell'algoritmo di ricerca vero e proprio, e poi si chiama la funzione di movimento del drone con parametri queste due variabili. Alla fine del ciclo si aumento il contatore dei passi svolti, si controlla se il drone è arrivato a destinazione, se non lo è il ciclo ricomincia, altrimenti viene annunciato il successo.
 
 	
 \section{Architetture software}
-	Parlo di
+Il software è strutturato in maniera modulare, in modo da permettere il riutilizzo delle singole componenti in diversi ambiti, o di mentenere ed aggiornare i moduli senza influenzare il funzionamento dell'intero programma, a patto di mantere la stessa interfaccia.
+\subsection{Pacchetto "Game engine"}
+Nel pacchetto Game Engine sono presenti i moduli che permettono l'utilizzo del sistema di simulazione
+\subsubsection{Game.py}
+Il modulo Game.py è la classe di gioco, che nel momento in cui ne viene creata un'istanza, inizializza le componenti del gioco (mondo, droni, knowledge base). All'interno è presente la funzione di gioco "start-game" in cui vengono eseguiti i passi di ogni turno di gioco. La selezione dell'agente viene fatta prelevando un oggetto Drone da un array di oggetti, per consentire la possibilità di sviluppare in seguito il gioco in maniera concorrente, facendo muovere più Droni nel mondo, e decretando vincitore il primo che raggiunge l'obiettivo. Questa funzionalità non era comunque richiesta ai fini della simulazione, quindi non è stata sviluppata. Subito dopo aver selezionato il Drone che deve fare la mossa, viene chiamata la funzione di rilevamento (probe) del valore della distanza, e quindi viene chiamata la "strategy" ovvero l'algoritmo che ritornerà il punto verso cui muoversi sotto forma di coordinate cartesiane.
+\subsubsection{Drone.py}
+Il modulo Drone.py è la classe che rappresenta l'agente. Quando viene istanziata, viene creato il grafo che rappresenta il mondo visitato dal Drone stesso, ed alcune variabili in cui vengono memorizzati dati che potranno essere utili per la scelta del prossimo passo. All'interno della classe troviamo la funzione "move" che svolge la funzione di diminuire di un'unita la variabile "fuel", aggiornare la posizione attuale e aggiungere il nodo della posizione al grafo. La funzione "strategy" serve semplicemente a richiamare l'algoritmo vero e proprio, e ritornare i valori x e y restituiti da quest'ultimo. La funzione "probe" salva il valore ricevuto dal "mondo" in un'array dinamico. E' inoltre presente una funzione "print-world" che se richiamata stampa a schermo l'attuale situazione del gioco, rappresentando i punti della matrice del mondo con un intero che indica il numero di volte che l'agente è passato su ogni casella.
+\subsubsection{DroneKnowledge.py}
+Inoltre è presente una classe DroneKnowledge che rappresenta un Drone con l'informazione completa sullo stato del mondo, utilizzato per eseguire il task attraverso un algoritmo greedy ottimo, che è stato usato per confrontare la qualità dell'algoritmo qui sviluppato.
+\subsection{Pacchetto utils}
+\subsubsection{Nodes.py}
+Il modulo "nodes.py" contiene la struttura dati che viene utilizzata per rappresentare il mondo visitato dal Drone sotto forma di grafo. Ogni nodo del grafo è rappresentato da una tupla "k" che rappresenta le coordinate del punto, e viene utilizzata come chiave di ricerca dei nodi, una variabile intera "weight" che rappresenta il numero di volte in cui il drone è passato su un determinato nodo, e la variabile "counter", incrementata ad ogni operazione sul grafo, che serve ad indicare quando il Drone è passato l'ultima volta sul nodo (più alto è il valore, più di recente è stato utilizzato il nodo). 
+La struttura a grafo è appunto composta di singoli nodi come sopra descritti. In fase di inizializzazione può essere impostata la variabile "graph-max-length" che permette di impostare un limite al numero massimo di nodi nel grafo, in caso di necessità di ottimizazione della memoria. L'interfaccia permette di prelevare il valore di un nodo date le coordinate, attraverso l'uso della funzione builtin "getitem" (ovvero si può accedere ai valori di un nodo con l'utilizzo della sintassi "grafo[(x, y)]" ). L'aggiunta di un nodo al grafo è gestita in modo da:
+
+Aggiungere un nuovo nodo se le coordinate non sono ancora presenti all'interno del grafo;
+
+Aggiornare un nodo se viene richiesto l'inserimento di coordinate già presenti, aumentando di 1 il valore weight, che indice il numero di volte in cui si è passato sul nodo, ed aggiornare il valore counter, in modo da memorizzare il fatto che questo è stato l'ultimo nodo usato
+
+Nel caso in cui sia stato impostato un limite alla lunghezza del grafo, eliminare il nodo usato meno di recente prima di aggiungerne uno nuovo
+\subsubsection{Matrix-generator.py}
+Nel modulo "matrix-generator.py" sono presenti vari tool che permettono la generazione del mondo sotto forma di matrice utili per il sistema di gioco, mentre nel modulo "direction-modifier.py" sono presenti funzione che servono a modificare la direzione finale scelta dall'algoritmo nel caso questa superi i limiti della matrice, o in generale a gestire le varie eccezioni causate dalla dimensione finita della rappresentazione del mondo, onde evitare loop o errori. 
+\subsection{Pacchetto Algorithm}
+\subsubsection{Algorithm.py}
+All'interno del pacchetto "algorithm" sono presenti gli algoritmi di ricerca, che verranno spiegati nel dettaglio in seguito. Questi ricevono in input due coordinate cartesiane e restituiscono nella stessa forma il risultato.
+
+
 	
 \section{Definizione delle strategie}
 	sai com'è
