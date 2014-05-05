@@ -1,24 +1,31 @@
-\section{Introduzione dei problemi di direction-finding}
+\section{Introduzione dei problemi di direction finding}
 
-In letteratura è presente un vasto assortimento di algoritmi e sistemi per la soluzione di problemi di DF. Introdurrò qui il problema,
-senza entrare nel dettaglio delle singole soluzioni proposte, per poi presentare un approccio differente per la risoluzione dello stesso.
+In questo capitolo viene introdotto il problema del direction finding (DF), ed i vari metodi utilizzati per la soluzione dello stesso. In particolare viene spiegato il sistema basato sulla potenza del segnale ricevuto, che è il metodo utilizzato per questo lavoro. 
 
-Dato un agente che riceve un segnale da più antenne trasmettitrici, il problema del DF è quello di stabilire la direzione di arrivo,
-ovvero la direzione da cui il segnale stesso è generato (nel caso di antenne multiple, una posizione in qualche modo vicina a queste).
+\subsection{Utilizzi delle tecniche di direction finding}
+Sebbene tecniche di DF per la navigazione stia diventando sempre meno importante, grazie alla presenza di sistemi di navigazione satellitare, c'è una sempre maggior richista di tali tecniche per determinare la posizione di riceventi e trasmettitrici, man mano che aumenta l'utilizzo di sistemi di comunicazione mobili. Ad esempio nel caso di servizi di sicurezza in cui sia richiesto di rintracciare l'origine di comunicazioni radio emesse da organizazioni criminali. Nell'intelligence militare, per rivelare possibili attività nemiche, o svelare posizioni o ordini impartiti via radio. Ma anche in ambiti di ricerca quali la radio astronomia o il sensing remoto di dati raccolti. 
 
-Gli algoritmi di DF sono di solito classificati dal numero di riceventi utilizzate. Quelli che utilizzano due o più riceventi, e quelli
-a ricevente singola, mobile. Possono essere classificati anche a seconda del metodo di trattamento del segnale, ovvero approcci basati
-sull'ampiezza del segnale, sulla sua fase, o su entrambe. 
+Un altro fattore che rende importante questo tipo di tecniche, è il sempre maggiore utilizzo di comunicazioni wireless. Il direction finding è quindi un primo passo fondamentale per la localizzazione radio, specialmente quando il contenuto di queste trasmissioni non può essere letto. La localizzazione degli emittenti è di solito un processo suddiviso in diverse fasi: emittenti posizionate in un largo spazio geografico possono permettere di approsimare la posizione con una precisione di pochi chilometri attraverso la triangolaizone. Ma la posizione dell'emittente può essere determinata in maniera più precisa utilizzando riceventi collocate nei veicoli. Poi sistemi di DF portatili permettono di affinare la ricerca nel raggio di un centinaio di metri, ad esempio all'interno di un edificio.
 
-I sistemi basati sull'ampiezza comparano l'ampiezza del segnale ricevuto dalle varie antenne per calcolare la posizione nel piano da cui
-il segnale è generato.
+L'obiettivo delle tecniche di direction finding è quelllo di determinare la direzione di un'emittente radio, misurando e valutando dei parametri dei campi elettromagnetici. In generale è sufficiente calcolare l'azimut per determinare la direzione, mentre il calcolo dell'altitudine è solitamente preso in considerazione da sistemi di DF installati su piattaforme volanti. Solo nel caso di una propagazione delle onde priva di disturbi la direzione del segnale emesso coincide con quella del segnale ricevuto. L'apparecchio che esegue il direction finding, prende in considerazione le onde ricevute, e le analizza cercando di approsimare al meglio la direzione di arrivo del segnale.
 
-Quelli basati sulla fase determinano la direzione di arrivo traendo informazione dalla fase assoluta, o dalla differenza delle fasi dei 
-segnali misurati dalle riceventi.
+\subsection{Classificazione dei sistemi di direction finding}
 
-\section{Utilizzi delle tecniche di Direction Finding}
-Queste tecniche sono utilizzate in diversi ambiti. Il Radio Direction Finding, o RDF, è stato in passato il principale aiuto alla navigazione marina, ma al giorno d'oggi questo è stato sostituito dall'utilizzo del GPS.
-Durante la seconda guerrda mondiale tali tecniche erano utilizzate per la localizzazione di trasmittenti segreti ed ostili all'interno del suolo inglese da parte del  Radio Security Service, e questo tipo di utilizzo continuò anche nel periodo della guerra fredda, su tutto il suolo europeo.
-Ci sono molti tipi di trasmettitori radio utilizzati in caso di emergenze, che sono molto utilizzati sull'aviazione civile, che attraverso l'utilizzo di queste tecniche permettono di rilevare la posizione di origine del segnale.
-Gli stessi apparecchi di ricerca in valanga (ARVA) utilizzano tali tecniche, permettendo a chi non è stato sepolto da una valanga di trovare la posizione di chi si ritrova bloccato.
-Altro utilizzo di questo tipo di tecniche è quello del tracciamento dei movimenti degli animali in natura, attraverso anche tecniche di triangolazione. Questa tecnica è usata sin dai primi anni 60 permettendo a ricercatori sul campo di stabilire la posizione di un animale ricevendo il segnale da diverse postazioni.
+In letteratura è presente un vasto assortimento di algoritmi e sistemi per la soluzione di problemi di DF.
+I sistemi di radio direction finding utilizzano una seria di antenne e una o più riceventi per stimare un angolo di rilevamento o delle coordinate geografiche di un segnale (SOI - Signal Of Interest) ricevuto. La funzione primaria di un sistema di DF è quello di calcolare la direzione di arrivo (DOA - Direction Of Arrival). 
+Gli algoritmi di DF sono di solito divisi in due categorie: sistemi di DF ad n canali, che utilizzano un canale della ricevente per ogni antenna, e sistemi di DF a canale singolo, che utilizzano una singola antenna, una serie di trasmettitrici e un sistema che permetta di passare da un canale all'altro, o che combini i segnali in modo da poterli presentare alla ricevente come un segnale singolo. I sistemi a canale singolo hanno ovviamente dei vantaggi rispetto a quelli a n canali, come ad esempio la dimensione, il peso, la portabilità, ma in generale perdono dal punto di vista della potenza di calcolo o della robustezza in condizioni avverse. La sfida rappresentata dallo sviluppo di tecniche di DF a canale singolo è ciò che ne fa un interessanto campo di studi come l'utilità di un sistema che può permettere di offrire prestazioni caratteristiche di sistemi ad n canali.
+
+Gli algoritmi di DF possono essere classificati anche, oltre che per il numero di canali utilizzati nella ricevente, anche per il modo in cui il segnale viene trattato. Gli approcci possono essere divisi in metodi basati sull'ampiezza del segnale (RSS - Received Signal Strenght), sulla fase	dell'onda ricevuta, o una combinazione delle due. I sistemi basati su RSS comparano l'ampiezza ricevuta dai vari elementi nella serie di antenne per localizzare un punto nel piano che sia vicino in qualche modo alle antenne dalle quali ha origine il segnale. I sistemi basati sulla fase del segnale determinano le informazioni necessarie a stabilire la DOA dalla fase assoluta, o dalla differenza di fase, dei segnali ricevuti dalle antenne. I sistemi che utilizzano entrambi i sistemi sono più complessi, ma in generale hanno prestazioni migliori
+
+\subsubsection{Sistemi a Tempo Di Arrivo (TOA)}
+
+Il tempo di arrivo di un segnale che viagga da un nodo all'altro può essere utilizzato per stimare la distanza fra i due nodi. Se i due nodi sono sincronizzati, la ricevente può determinare il ToA del segnale. La sincronizzazione fra i due nodi è un punto fondamentale di questo tipo di tecnica, e da questa in genere dipendono le prestazioni del sistema nel complesso. In questo tipo di tecnica c'è bisogno di almeno 3 nodi per effettuare la stima della posizione.
+
+\subsubsection{Sistemi a Direzione di Arrivo (DOA)}
+
+I sistemi basati sulla direzione di arrivo utilizzano di solito stazioni ad antenna multipla. Questi sistemi sono interessanti in quanto, a differenza di altri, non hanno bisogno di una sincronizzazione fra le stazioni, e sono sufficienti due stazioni base per permettere	di effettuare la localizzazione. Ci sono molte soluzioni basate su questo approccio sviluppate negli ultimi quranta anni. Oltre alle più citate, ce ne sono anche alcune che pur essendo subottimali forniscono delle ottime prestazioni, e sono di solito considerati algoritmi di riferimento in questo ambito, come il MUSIC o l'ESPRIT e le varianti.
+
+\subsubsection{Sistemi RSS}
+Queste tecniche si basano sull'idea che la potenza del segnale varia con la distanza. In questo modo la RSS inviata alla ricevente, dà informazioni riguardo la distanza di questa dalla sorgente. In ogni caso è necessario stabilire una scala che permetta di convertire la differenza di potenza del segnale ricevuto (o path loss - PL) in una distanza. Un modello comune per la PL chiamato "log-normal shadowing PL model" è dato da:
+ $$ PL\left(d\right) = PL\left(d_0\right) + 10n_plog_{10} \left( \frac{d}{d_0} \right) + v $$
+dove $ PL(d) $ è il PL in dB alla distanza d, $ PL(d_0) $ è il PL in dB ad una distanza relativamente breve $ d_0 < d $ ($ d_{0} $ di solito è un metro), $n_p$ è quello che è chiamato path loss exponent mentre $v$ è una variabile gaussiana casuale che rappresenta l'effetto del "log normal shadowing". Solitamente questa variabile $v$ è considerata zero. Questo modello può essere utilizzato sia per utilizzi interni che all'aria aperta. I valori di $n_p$ più comunemente utilizzati possono andare da 2 in campo aperto, o 4-6 in caso di utilizzo in un percorso ostruito da muri.
