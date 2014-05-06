@@ -1,13 +1,17 @@
+\chapter{Problemi di direction-finding}
+\fancyhead[RO]{\bfseries Problemi di direction-finding}
 \section{Introduzione dei problemi di direction finding}
 
-In questo capitolo viene introdotto il problema del direction finding (DF), ed i vari metodi utilizzati per la soluzione dello stesso. In particolare viene spiegato il sistema basato sulla potenza del segnale ricevuto, che è il metodo utilizzato per questo lavoro. 
+L'obiettivo delle tecniche di direction finding (DF) è quelllo di determinare la direzione di provenienza di un segnale trasmesso da un'emittente radio, misurando e valutando alcuni parametri dei campi elettromagnetici. In generale è sufficiente calcolare l'azimut per determinare la direzione, mentre il calcolo dell'altitudine è solitamente preso in considerazione da sistemi di DF installati su piattaforme volanti. Solo nel caso di una propagazione delle onde priva di disturbi la direzione del segnale emesso coincide con quella del segnale ricevuto. L'apparecchio che esegue il direction finding, prende in considerazione le onde ricevute, e le analizza cercando di approsimare al meglio la direzione di arrivo del segnale.
+
+In questo capitolo vengono introdotte le diverse tecniche utilizzate in diversi campi per risolvere questo tipo di problemviene introdotto il problema. In particolare viene spiegato il sistema basato sulla potenza del segnale ricevuto, che è il metodo utilizzato per questo lavoro. 
 
 \subsection{Utilizzi delle tecniche di direction finding}
 Sebbene tecniche di DF per la navigazione stia diventando sempre meno importante, grazie alla presenza di sistemi di navigazione satellitare, c'è una sempre maggior richista di tali tecniche per determinare la posizione di riceventi e trasmettitrici, man mano che aumenta l'utilizzo di sistemi di comunicazione mobili. Ad esempio nel caso di servizi di sicurezza in cui sia richiesto di rintracciare l'origine di comunicazioni radio emesse da organizazioni criminali. Nell'intelligence militare, per rivelare possibili attività nemiche, o svelare posizioni o ordini impartiti via radio. Ma anche in ambiti di ricerca quali la radio astronomia o il sensing remoto di dati raccolti. 
 
 Un altro fattore che rende importante questo tipo di tecniche, è il sempre maggiore utilizzo di comunicazioni wireless. Il direction finding è quindi un primo passo fondamentale per la localizzazione radio, specialmente quando il contenuto di queste trasmissioni non può essere letto. La localizzazione degli emittenti è di solito un processo suddiviso in diverse fasi: emittenti posizionate in un largo spazio geografico possono permettere di approsimare la posizione con una precisione di pochi chilometri attraverso la triangolaizone. Ma la posizione dell'emittente può essere determinata in maniera più precisa utilizzando riceventi collocate nei veicoli. Poi sistemi di DF portatili permettono di affinare la ricerca nel raggio di un centinaio di metri, ad esempio all'interno di un edificio.
 
-L'obiettivo delle tecniche di direction finding è quelllo di determinare la direzione di un'emittente radio, misurando e valutando dei parametri dei campi elettromagnetici. In generale è sufficiente calcolare l'azimut per determinare la direzione, mentre il calcolo dell'altitudine è solitamente preso in considerazione da sistemi di DF installati su piattaforme volanti. Solo nel caso di una propagazione delle onde priva di disturbi la direzione del segnale emesso coincide con quella del segnale ricevuto. L'apparecchio che esegue il direction finding, prende in considerazione le onde ricevute, e le analizza cercando di approsimare al meglio la direzione di arrivo del segnale.
+
 
 \subsection{Classificazione dei sistemi di direction finding}
 
@@ -29,3 +33,4 @@ I sistemi basati sulla direzione di arrivo utilizzano di solito stazioni ad ante
 Queste tecniche si basano sull'idea che la potenza del segnale varia con la distanza. In questo modo la RSS inviata alla ricevente, dà informazioni riguardo la distanza di questa dalla sorgente. In ogni caso è necessario stabilire una scala che permetta di convertire la differenza di potenza del segnale ricevuto (o path loss - PL) in una distanza. Un modello comune per la PL chiamato "log-normal shadowing PL model" è dato da:
  $$ PL\left(d\right) = PL\left(d_0\right) + 10n_plog_{10} \left( \frac{d}{d_0} \right) + v $$
 dove $ PL(d) $ è il PL in dB alla distanza d, $ PL(d_0) $ è il PL in dB ad una distanza relativamente breve $ d_0 < d $ ($ d_{0} $ di solito è un metro), $n_p$ è quello che è chiamato path loss exponent mentre $v$ è una variabile gaussiana casuale che rappresenta l'effetto del "log normal shadowing". Solitamente questa variabile $v$ è considerata zero. Questo modello può essere utilizzato sia per utilizzi interni che all'aria aperta. I valori di $n_p$ più comunemente utilizzati possono andare da 2 in campo aperto, o 4-6 in caso di utilizzo in un percorso ostruito da muri.
+
