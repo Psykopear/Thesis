@@ -48,19 +48,19 @@ Nel pacchetto Game Engine sono presenti i moduli che permettono l'utilizzo del s
 Il modulo Game.py è la classe di gioco, che nel momento in cui ne viene creata un'istanza, inizializza le componenti del gioco (mondo, droni, knowledge base). All'interno è presente la funzione di gioco "start-game" in cui vengono eseguiti i passi di ogni turno di gioco. 
 \begin{verbatim}
 def start_game(self):
-        i = 0
-        while(self.asset_not_found):
-            drone = self.next_drone()
-            drone.probe(self.world[drone.actual_position[0]][drone.actual_position[1]])
-            x, y = drone.strategy()
-            drone.move(x, y)
-            i += 1
-            if self.asset_found(x, y) or drone.fuel == 0:
-                self.asset_not_found = False
-        if drone.fuel == 0:
-            return 0
-        else:
-            return i
+  i = 0
+  while(self.asset_not_found):
+    drone = self.next_drone()
+    drone.probe(self.world[drone.actual_position[0]][drone.actual_position[1]])
+    x, y = drone.strategy()
+    drone.move(x, y)
+    i += 1
+    if self.asset_found(x, y) or drone.fuel == 0:
+      self.asset_not_found = False
+  if drone.fuel == 0:
+    return 0
+  else:
+    return i
 \end{verbatim}
 Questa funzione entra in un ciclo while che finisce in due casi: se il drone arriva a destinazione, o se il valore drone.fuel è uguale a 0. Questa variabile è stata introdotta per simulare un limite pratico al numero di passi che possono essere eseguiti. All'interno del ciclo si può notare che il "drone" viene prelevato (attraverso una funzione presente nello stesso modulo) da un array. Questo per consentire la possibilità di sviluppare in seguito il gioco in maniera concorrente, facendo muovere più Droni nel mondo, e decretando vincitore il primo che raggiunge l'obiettivo. Questa funzionalità non era comunque richiesta ai fini della simulazione, quindi non è stata sviluppata. Subito dopo aver selezionato il Drone che deve fare la mossa, viene chiamata la funzione di rilevamento (probe) del valore della distanza, con parametri le coordinate della posizione attuale del drone, che riceverà dal mondo informazioni da aggiungere alla knowledge base. Viene quindi chiamata la "strategy" ovvero l'algoritmo che ritornerà il punto verso cui muoversi sotto forma di coordinate cartesiane. Una volta stabilite le coordinate, viene richiamata la funzione di movimento vera e proprio del drone, si aumenta il contatore (che rappresenterà il numero di passi eseguiti prima di uscire dal ciclo, quindi l'indice di prestazione dell'algoritmo). Infine si fa un controllo e se il "fuel" è terminato, o se il drone è giunto a destinazione, viene modificata la variabile di controllo del ciclo while e la funzione ritorna il risultato.
 
@@ -69,23 +69,23 @@ Il modulo Drone.py è la classe che rappresenta l'agente. Quando viene istanziat
 All'interno della classe troviamo il metodo "move":
 \begin{verbatim}
 def move(self, x, y):
-        self.fuel -= 1
-        self.actual_position = (x, y)
-        self.graph[x][y] += 1
-        self.kb.add_node_coord((x, y))
+    self.fuel -= 1
+    self.actual_position = (x, y)
+    self.graph[x][y] += 1
+    self.kb.add_node_coord((x, y))
 \end{verbatim}
 che svolge la funzione di diminuire di un'unita la variabile "fuel", aggiornare la posizione attuale e aggiungere il nodo della posizione al grafo del KB. 
 La funzione "strategy":
 \begin{verbatim}
 def strategy(self):
-        return search_far_calibration(self)
+    return search_far_calibration(self)
 \end{verbatim}
 serve semplicemente a richiamare l'algoritmo vero e proprio, e ritornare i valori x e y restituiti da quest'ultimo. 
 La funzione "probe":
 \begin{verbatim}
 def probe(self, distance):
-        self.distances.append(distance)
-        self.kb.change_weight(self.actual_position, distance)
+    self.distances.append(distance)
+    self.kb.change_weight(self.actual_position, distance)
 \end{verbatim}
 salva il valore ricevuto dal "mondo" in un'array dinamico, che servirà per eseguire calcoli considerando le ultime n distanze misurate, ed aggiorna il grafo del KB. 
 E' inoltre presente una funzione "print-world" che se richiamata stampa a schermo l'attuale situazione del gioco, rappresentando i punti della matrice del mondo con un intero che indica il numero di volte che l'agente è passato su ogni casella.
@@ -99,9 +99,9 @@ Inoltre è presente una classe DroneKnowledge che rappresenta un Drone con l'inf
 Il modulo "nodes.py" contiene la struttura dati che viene utilizzata per rappresentare il mondo visitato dal Drone sotto forma di grafo. In nodi sono definiti coe segue:
 \begin{verbatim} 
 class Node(object):
-    def __init__(self, k, weight, counter):
-        self.k = k
-        self.v = (weight, 1, counter)
+  def __init__(self, k, weight, counter):
+    self.k = k
+    self.v = (weight, 1, counter)
 \end{verbatim}
 Ogni nodo del grafo è rappresentato da una coppia chiave valore. La chiave è la tupla "k" che rappresenta le coordinate del punto, e viene utilizzata come chiave di ricerca dei nodi. Il valore indicizzato è composto da una variabile intera "weight" dove viene immagazinata la misurazione effettuata dalla probe del drone, il numero 1 rappresenta il numero di volte in cui il drone è passato su un determinato nodo (in fase di creazione del nodo questo sarà necessariamente 1), e la variabile "counter", incrementata ad ogni operazione sul grafo, che serve ad indicare quando il Drone è passato l'ultima volta sul nodo (più alto è il valore, più di recente è stato utilizzato il nodo). 
 La struttura a grafo è appunto composta di singoli nodi come sopra descritti. In fase di inizializzazione può essere impostata la variabile "graph-max-length" che permette di impostare un limite al numero massimo di nodi nel grafo, in caso di necessità di ottimizazione della memoria. L'interfaccia permette di prelevare il valore di un nodo date le coordinate, attraverso l'uso della funzione builtin "getitem" (ovvero si può accedere ai valori di un nodo con l'utilizzo della sintassi "grafo[(x, y)]" ). L'aggiunta di un nodo al grafo è gestita in modo da:
@@ -117,8 +117,8 @@ Nel modulo "matrix-generator.py" sono presenti vari tool che permettono la gener
 \begin{verbatim}
 matrix = [[0 for i in range(size)] for j in range(size)]
 for i in range(size):
-    for j in range(size):
-        matrix[i][j] = float(fpformat.fix(math.sqrt(math.fabs(pow((x_end - i), 2) + pow((y_end - j), 2))), 3))
+  for j in range(size):
+    matrix[i][j] = float(fpformat.fix(math.sqrt(math.fabs(pow((x_end - i), 2) + pow((y_end - j), 2))), 3))
 matrix[x_end][y_end] = -1
 return matrix
 \end{verbatim}
@@ -127,47 +127,47 @@ return matrix
 Nel modulo "direction-modifier.py" sono presenti funzioni che servono a modificare la direzione finale scelta dall'algoritmo nel caso questa superi i limiti della matrice, o in generale a gestire le varie eccezioni causate dalla dimensione finita della rappresentazione del mondo, onde evitare loop o errori. Qui è definita anche la convenzione utilizzata in tutto il programma per rappresentare le 8 direzioni possibili:
 \begin{verbatim}
 directions = {
-    0: (1, 0),
-    1: (1, -1),
-    2: (0, -1),
-    3: (-1, -1),
-    4: (-1, 0),
-    5: (-1, 1),
-    6: (0, 1),
-    7: (1, 1),
+  0: (1, 0),
+  1: (1, -1),
+  2: (0, -1),
+  3: (-1, -1),
+  4: (-1, 0),
+  5: (-1, 1),
+  6: (0, 1),
+  7: (1, 1),
 }
 
 get_directions = {
-    (1, 0): 0,
-    (1, -1): 1,
-    (0, -1): 2,
-    (-1, -1): 3,
-    (-1, 0): 4,
-    (-1, 1): 5,
-    (0, 1): 6,
-    (1, 1): 7,
+  (1, 0): 0,
+  (1, -1): 1,
+  (0, -1): 2,
+  (-1, -1): 3,
+  (-1, 0): 4,
+  (-1, 1): 5,
+  (0, 1): 6,
+  (1, 1): 7,
 }
 
 
 d = {
-    "E": 0,
-    "NE": 1,
-    "N": 2,
-    "NO": 3,
-    "O": 4,
-    "SO": 5,
-    "S": 6,
-    "SE": 7,
+  "E": 0,
+  "NE": 1,
+  "N": 2,
+  "NO": 3,
+  "O": 4,
+  "SO": 5,
+  "S": 6,
+  "SE": 7,
 }
 \end{verbatim}
 
 Ad ogni possibile spostamento in una delle caselle adiacenti è stato assegnato un numero. Le coordinate rappresentano di quanto si debba traslare sugli assi x e y. Ad esempio quindi la direzione 0, che corrisponde a (1, 0), causerà uno spostamento di +1 sull'asse x (ovvero un passo a destra), e ogni volta che il valore chiave aumento di 1, lo vettore spostamento viene rotato di 45° in senso antiorario. Quindi la chiave di movimento 1 causerà un movimento nella casella in alto a destra ecc. Il dizionario "d" è un'ulteriore semplificazione, che permette di associare a questi numeri la direzione dello spostamento. Si accede a questi dizionari attraverso i metodi:
 \begin{verbatim}
 def get_direction(x_mod, y_mod):
-    return get_directions[x_mod, y_mod]
+  return get_directions[x_mod, y_mod]
 
 def modifier(way):
-    return directions.get(way)[0], directions.get(way)[1]
+  return directions.get(way)[0], directions.get(way)[1]
 
 \end{verbatim}
 
@@ -177,16 +177,28 @@ def modifier(way):
 All'interno del pacchetto "algorithm" sono presenti gli algoritmi di ricerca, che verranno spiegati nel dettaglio in seguito. Questi ricevono in input due coordinate cartesiane e restituiscono nella stessa forma il risultato.
 	
 \section{Definizione delle strategie}
-La strategia per la scelta della direzione in cui muovere il Drone è suddivisa in due fasi. Una calibrazione iniziale fatta per scegliere capire in che parte del piano rappresentante il mondo si trovi il punto di arrivo, e una strategia di movimento per avvicinarsi nel minor numero di passi al punto di arrivo. Al fine di migliorare l'efficenza ed evitare di incorrere in loop durante il percorso, in qualsiasi punto dell'algoritmo di ricerca viene fatto un controllo sul nodo in cui l'agente si trova, e nel caso sia passato per più di tre volte nello stesso punto questo si sposta in una delle caselle adiacenti in cui è passato il minor numero di volte e viene riavviato il processo di calibrazione.
-La prima fase consiste in una "calibrazione" che serve a capire in quale parte del piano rispetto all'agente si trovi il punto di arrivo. 
+La strategia per la scelta della direzione in cui muovere il Drone è suddivisa in due fasi. Una calibrazione iniziale, e una strategia di movimento per avvicinarsi nel minor numero di passi al punto di arrivo. Al fine di migliorare l'efficenza ed evitare di incorrere in loop durante il percorso, in qualsiasi punto dell'algoritmo di ricerca viene fatto un controllo sul nodo in cui l'agente si trova, e nel caso sia passato per più di tre volte nello stesso punto questo si sposta in una delle caselle adiacenti in cui è passato il minor numero di volte e viene riavviato il processo di calibrazione.
+La fase di calibrazione serve a capire in quale parte del piano rispetto all'agente si trovi il punto di arrivo. 
 La seconda fase consiste nel muoversi nella parte di piano in cui si trova la sorgente, aggiustando di volta in volta la direzione. Gli aggiustamenti sono fatti in modo da seguire il più possibile una traiettoria lineare, riconoscendo quando ci si trova sulla retta che conduce alla destinazione nel minor numero di passi possibile, cercando in ogni caso di evitare di passare più volte nello stesso punto.
 	
 \section{Esecuzione dell'algoritmo}
-Durante la fase di calibrazione, l'agente si sposta quindi per prima cosa sul piano orizzontale, e comparando le due misurazioni è in grado di escludere la parte di piano a destra o a sinistra del punto di partenza, poi sul piano verticale, in modo da escludere la porzione di piano sopra o sotto il punto di partenza. 
+Durante la fase di calibrazione, l'agente si sposta quindi per prima cosa sul piano orizzontale (in direzione Est), e salva le due misurazioni fatte (nel punto di partenza e subito dopo il movimento). Dopodichè il drone si muove sul piano verticale (in direzione Nord): 
+\begin{verbatim}
+if STEP <= 2:
+    direction = d["E"] if STEP == 1 else d["N"] if STEP == 2 else drone.last_direction
+    return void_directions(direction, drone)
+\end{verbatim}
+Una volta raccolte le tre misurazioni, queste vengono comparate per escludere le porzioni di piano in cui sicuramente non si trova la sorgente:
+\begin{verbatim}
+elif STEP == 3:
+    sud_ovest, sud_est, nord_est = distances[:3]
+    direction = "S" if sud_est < nord_est else "N" if sud_est > nord_est else ""
+    direction += "E" if sud_ovest > sud_est else "O" if sud_ovest < sud_est else ""
+    drone.last_direction = d[direction]
+return go_far(drone)
+\end{verbatim}
 
-(immagini che rappresentano la calibrazione)
-
-Una volta esclusi tre quadranti, il Drone inizia a muoversi nella direzione della bisettrice che taglia l'unica porzione di piano dove il punto di arrivo può trovarsi. Dopo un passo sulla bisettrice, viene valutato di quanto ci si è avvicinati al punto di arrivo. Se il punto è sulla bisettrice, la differenza fra l'ultima distanza misurata e la precedente dovrà essere di circa 1.414. Se il valore misurato è minore, significa che il punto si può trovare sopra o sotto la bisettrice. A questo punto viene eseguita l'unica scelta "random" dell'algoritmo, ovvero essendo uguale la probabilità che il punto di arrivo sia sopra o sotto la bisettrice, l'agente si sposta in direzione verticale od orizzontale. Se con quest'ultimo spostamento si è allontanato dalla sorgente, l'agente si muove in direzione perpendicolare rispetto all'ultimo movimento, tornando sulla bisettrice, altrimenti viene svolta ancora una valutazione: se la differenza fra l'ultima distanza e quella precedente è pari a 1, significa che il punto di arrivo è sulla retta in cui si è appena mosso, e il Drone continuerà in quella direzione finco al raggiungimento dell'obiettivo, altrimenti si muoverà in direzione diagonale, parallelo rispetto alla bisettrice, e tutto il processo viene iterato. Questa fase della ricerca si interrompe in due casi: 
+Una volta esclusi tre quadranti, il Drone inizia a muoversi nella direzione della bisettrice che taglia l'unica porzione di piano dove il punto di arrivo può trovarsi. Si muove poi in questa direzione fino a che questa porta in una posizione più vicina al punto di arrivo della precedente. A questo punto viene eseguita l'unica scelta casuale dell'algoritmo, ovvero essendo uguale la probabilità che il punto di arrivo sia sopra o sotto la bisettrice, l'agente si sposta in direzione verticale od orizzontale. Se con quest'ultimo spostamento si è allontanato dalla sorgente, l'agente si muove in direzione perpendicolare rispetto all'ultimo movimento, prendendo quindi la direzione giusta, altrimenti viene svolta ancora una valutazione: se la differenza fra l'ultima distanza e quella precedente è pari a 1, significa che il punto di arrivo è sulla retta in cui si è appena mosso, e il Drone continuerà in quella direzione fino al raggiungimento dell'obiettivo. Altrimenti continua in quella direzione, e tutto il processo viene iterato. Questa fase della ricerca si interrompe in due casi: 
 
 Nel caso in cui, durante uno dei movimenti in diagonale, il Drone si stia allontando dalla sorgente. In tal caso viene rieseguita la calibrazione e il processo rinizia da capo;
 
