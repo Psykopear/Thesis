@@ -10,10 +10,38 @@ Un altro parametro che influenza l'efficenza dell'algoritmo è il numero di pass
 \section{Risultati}
 I risultati dell'algoritmo cambiano anche qui in base ad altre condizioni: ad esempio nel caso in cui uno fra il Drone e il punto di arrivo si trovi ai bordi della matrice. Questo perchè, in questi casi, il problema è stato affrontato cercando una soluzione che permettesse semplicemente di evitare eventuali errori di esecuzione, falsando in qualche modo l'esecuzione dell'algoritmo, in quanto la tecnica è pensata per lavorare in campo aperto, in assenza di ostacoli. L'algoritmo arriva comunque a una soluzione, ma ha bisogno di più passaggi perchè appunto questa è una situazione anomala. E' stato quindi deciso di valutare la bontà dell'algoritmo escludendo queste situazioni, effettuando i test per tutte le posizioni possibili escluse quelle che portano sicuramente ad una situazione di eccezione. Tale situazione potrebbe incorrere anche in altri casi, ma questo è parte del problema (se il Drone si allontana dal punto di arrivo e va verso il bordo pur non essendo questo situato in posizioni estreme) e quindi ci si è limitati ad escludere le situazioni sfavorevoli a priori causate da problematiche tecniche e non intrinseche al problema.
 Queste sono le schermate per testare l'algoritmo su una matrice 20x20:
+\begin{figure}[hb]
+\center
 \includegraphics[width=\textwidth]{immagini/Test1.png}
+\caption{Viene richiamata la suite di test.}
+\end{figure}
+
+\begin{figure}[hb]
+\center
 \includegraphics[width=\textwidth]{immagini/Test1-1.png}
+\caption{Si inserisce la dimensione della matrice.}
+\end{figure}
+
+\begin{figure}[hb]
+\center
 \includegraphics[width=\textwidth]{immagini/test2.png}
+\caption{Se nella cartella è presente un file con i risultati dell'algoritmo ottimale, viene utilizzato questo invece di rifare i calcoli.}
+\end{figure}
+
+\begin{figure}[hb]
+\center
 \includegraphics[width=\textwidth]{immagini/test3.png}
+\caption{Si possono prelevare i dati anche per l'algoritmo in test, se questi sono stati salvati su un file, evitando di eseguire i calcoli.}
+\end{figure}
+
+\begin{figure}[hb]
+\center
 \includegraphics[width=\textwidth]{immagini/test5.png}
-E questi sono i risultati ottenuti:\\*
+\caption{Test in esecuzione...}
+\end{figure}
+
+\begin{figure}[hb]
+\center
 \includegraphics[width=\textwidth]{immagini/Results.png}
+\caption{Vengono visualizzati a schermo i risultati ottenuti}
+\end{figure}
