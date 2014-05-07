@@ -1,6 +1,6 @@
 \chapter{Allegati}
+Tutto il codice è disponibile su github, all'indirizzo: \\https://github.com/Psykopear/DroneGame
 \section{Sorgente algoritmo geometrico}
-Tutto il codice è disponibile su github, all'indirizzo https://github.com/Psykopear/DroneGame
 \begin{verbatim}
 from utils.direction_modifier import void_directions, get_direction, d
 import random
@@ -101,6 +101,30 @@ def change_strategy(drone):
   - x, min(close_distances)[2] - y), drone)
 
 \end{verbatim}
+
+
+\section{Sorgente dell'algoritmo ottimo}
+\begin{verbatim}
+def greedy_generic(drone):
+
+  x, y = drone.actual_position
+
+  available = []
+
+  for x_index in (x - 1, x, x + 1):
+
+    for y_index in (y - 1, y, y + 1):
+
+      if x_index >= 0 and x_index < len(drone.graph[0]) \
+      and y_index >= 0 and y_index < len(drone.graph[0]):
+        if x_index != x or y_index != y:
+          available.append([drone.kb[(x_index, y_index)][0], \
+          x_index, y_index])
+
+  go_x, go_y = min(available)[1], min(available)[2]
+  return void_directions(get_direction(go_x - x, go_y - y), drone)
+
+\end{verbatim}
 	
 \section{Sorgente generazione grafo dinamico}
 \begin{verbatim}
@@ -178,11 +202,51 @@ class Node(object):
 \end{verbatim}
 \pagebreak
 \section{Screenshot iterazioni}
+
+\begin{figure}[hb]
+\center
 \includegraphics[width=\textwidth]{immagini/Run1.png}
+\caption{Viene avviata la simulazione, su una matrice 40x40.}
+\end{figure}
+
+\begin{figure}[hb]
+\center
 \includegraphics[width=\textwidth]{immagini/Run2.png}
+\caption{Inizio: il Drone si trova dove è visualizzato il numero "1".}
+\end{figure}
+
+\begin{figure}[hb]
+\center
 \includegraphics[width=\textwidth]{immagini/Run3.png}
+\caption{Primo passo della calibrazione.}
+\end{figure}
+
+\begin{figure}[hb]
+\center
 \includegraphics[width=\textwidth]{immagini/Run4.png}
+\caption{Secondo passo della calibrazione.}
+\end{figure}
+
+\begin{figure}[hb]
+\center
 \includegraphics[width=\textwidth]{immagini/Run5.png}
+\caption{Il Drone inizia a muoversi in diagonale verso l'obiettivo.}
+\end{figure}
+
+\begin{figure}[hb]
+\center
 \includegraphics[width=\textwidth]{immagini/Run6.png}
+\caption{Cambio direzione perchè non si sta più avvicinando.}
+\end{figure}
+
+\begin{figure}[hb]
+\center
 \includegraphics[width=\textwidth]{immagini/Run7.png}
+\caption{Altro cambio direzione. Ma non è quella giusta!}
+\end{figure}
+
+\begin{figure}[hb]
+\center
 \includegraphics[width=\textwidth]{immagini/Run8.png}
+\caption{Ultimo cambio di direzione ed obiettivo raggiunto.}
+\end{figure}
