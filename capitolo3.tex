@@ -1,11 +1,11 @@
 \chapter{Implementazione agente di ricerca}
 \fancyhead[RO]{\bfseries Implementazione agente di ricerca}
-La situazione che inizialmente si è posta è stata quella di permettere ad un mezzo autonomo (ovvero in grado di operare senza azione esterna), ad esempio un robot dotato di ruote, o un multirotore, di raggiungere una postazione in grado di emettere un segnale. È stato quindi deciso di risolvere il problema sviluppando un algoritmo in grado di eseguire i passi necessari all'interno di una simulazione astratta del mondo. Il problema è quindi quello tipico del radio direction finding. Verrà qui introdotto il concetto di "ricerca", necessario per definire più formalmente il problema. In seguito viene presentata l'implementazione software del problema, presentando inizialmente la suddivisione logica del software, spiegandone l'utilizzo, e infine analizzando più nel dettaglio i singoli moduli che ne fanno parte, evidenziando le parti di codice più rilevanti.
+La situazione inizialmente posta è stata quella di permettere ad un mezzo autonomo (ovvero in grado di operare senza azione esterna) come un robot dotato di ruote o un multirotore, di raggiungere una postazione in grado di emettere un segnale. È stato quindi sviluppato un algoritmo in grado di eseguire i passi necessari all'interno di una simulazione astratta del mondo. Il problema è quindi quello tipico del radio direction finding. Verrà qui introdotto il concetto di "ricerca", necessario per definire più formalmente il problema. In seguito viene presentata l'implementazione software del problema, descrivendo prima la suddivisione logica del software, spiegandone l'utilizzo, e infine analizzando più nel dettaglio i singoli moduli che ne fanno parte, evidenziando le parti di codice più rilevanti.
 
 \section{Ricerca e informazione imperfetta}
-È definito "agente" una qualunque entità in grado di percepire l'ambiente circostante attraverso dei sensori, e di eseguire delle azioni attraverso degli attuatori. Nel campo dell'intelligenza artificiale è definito intelligente quell'agente che fa la cosa giusta al momento giusto. È quindi necessario stabilire anzitutto quale sia l'obiettivo, per poter massimizzare le prestazioni. Il compito dell'agente sarà quindi quello di stabilire una sequenza di azioni che portano al raggiungimento di uno stato obiettivo. 
+È definito "agente" una qualunque entità in grado di percepire l'ambiente circostante attraverso dei sensori, e di eseguire delle azioni attraverso degli attuatori. Nel campo dell'intelligenza artificiale è definito intelligente quell'agente che fa la cosa giusta al momento giusto. È quindi necessario stabilire anzitutto quale sia l'obiettivo. Il compito dell'agente è quello di stabilire una sequenza di azioni che portano al raggiungimento di uno stato obiettivo. 
 La formulazione del problema è il processo che porta a decidere, dato un obiettivo, quali azioni e stati considerare. La considerazione degli stati è strettamente legata alle informazioni che l'agente dispone e che se non avesse non potrebbe fare altro che scegliere a caso. In generale un agente che ha a disposizione diverse opzioni immediate di valore sconosciuto, può decidere cosa fare esaminando diverse possibili sequenze di azioni che portano a stati di valore conosciuto, scegliendo quindi la sequenza migliore. Questo processo di selezione è detto ricerca, la cui implementazione ha come input un problema e restituisce la soluzione sotto forma di sequenza di azioni. La fase in cui l'agente svolge le azioni è detta esecuzione.
-Fondamentale nel permettere di sviluppare una sequenza di scelte adeguate, è la fase di astrazione del problema, fatta per semplificare le condizioni in cui si è sviluppato l'algoritmo, prescindendo da problemi di carattere pratico, eliminando le problematiche di ingegnerizzazione. Un'astrazione è valida se possiamo espandere ogni soluzione astratta in una soluzione nel mondo dettagliato; l'utilità è quindi quella di rendere più facile l'esecuzione delle azioni nel mondo astratto rispetto a quello originale. 
+Fondamentale nel permettere di sviluppare una sequenza di scelte adeguate, è la fase di astrazione del problema, fatta per semplificare le condizioni in cui si è sviluppato l'algoritmo, prescindendo da problemi di carattere pratico. Un'astrazione è valida se possiamo espandere ogni soluzione astratta in una soluzione nel mondo dettagliato; l'utilità è quindi quella di rendere più facile l'esecuzione delle azioni nel mondo astratto rispetto a quello originale. 
 Nel problema analizzato l'agente dispone di informazioni limitate sullo stato del mondo, in quanto quest'ultimo non è completamente conosciuto dall'agente. È stato quindi necessario sviluppare una tecnica apposita, in quanto non si sarebbe potuto utilizzare un algoritmo classico di ricerca informata, quali l'A* o algoritmi greedy, perchè questi ultimi necessitano di informazione completa sugli stati del mondo, e non sarebbe stato conveniente utilizzare un algoritmo di ricerca completamente non informata, perchè non si sarebbe sfruttata l'informazione sugli stati in cui man mano l'agente si trova.
 
 
@@ -23,7 +23,7 @@ Le componenti che definiscono il mondo simulato sono:
 \end{itemize}
 
 \subsection{Mondo}
-Il "mondo" è un'astrazione semplificata di un possibile campo di esecuzione, in qui si prendono in considerazione solamente gli elementi necessari all'esecuzione dell'algoritmo. Questo è rappresentato sotto forma di matrice M di dimensioni $n$x$n$. Un punto di coordinate $(x_{end} y_{end})$, M[x_{end}][y_{end}], rappresenta lo stato-obiettivo, in cui è memorizzato un valore numerico negativo. In tutti gli altri punti viene memorizzato un valore float che indica la distanza euclidea del punto in cui il valore è memorizzato dal punto M[x_{end}][y_{end}]. La formula sarà quindi:
+Il "mondo" è un'astrazione semplificata di un possibile campo di esecuzione, in cui si prendono in considerazione solamente gli elementi necessari all'esecuzione dell'algoritmo. Questo è rappresentato sotto forma di matrice M di dimensioni $n$x$n$. Un punto di coordinate $(x_{end}, y_{end})$ o $M[x_{end}][y_{end}]$, rappresenta lo stato-obiettivo, in cui è memorizzato un valore numerico negativo. In tutti gli altri punti viene memorizzato un valore float che indica la distanza euclidea del punto in cui il valore è memorizzato, dal punto $M[x_{end}][y_{end}]$. La formula sarà quindi:
 $$\sqrt{|(x_{end} - x)^2 + (y_{end} - y)^2|}$$
 Ad esempio nel punto $(x_{end}+1, y_{end})$ sarà memorizzato il valore "1.000", nel punto $(x_{end}+1, y_{end}+1)$ il valore "1.414", nel punto $(x_{end}, y_{end})$ il valore "-1". In questo modo l'agente è in grado di sapere quando l'obiettivo è stato raggiunto, in quanto l'unico valore negativo nella matrice sarà quello del punto di arrivo, mentre tutti gli altri saranno utili alla risoluzione del problema.
 L'agente è libero di muoversi in ognuno dei punti di coordinate $ x, y $ tali che $ (x-1) \le x \le (x+1), (y-1) \le y \le (y+1) $.
@@ -32,10 +32,10 @@ L'agente è libero di muoversi in ognuno dei punti di coordinate $ x, y $ tali c
 L'agente è rappresentato da una classe, chiamata "Drone", che nel momento in cui viene istanziata inizializza le componenti necessarie a memorizzare le informazioni necessarie alla ricerca. All'interno si trovano diversi metodi: il metodo che permette l'effettivo spostamente sul mondo, il metodo per l'acquisizione delle misurazioni provenienti dal mondo ed anche un metodo che permette di stampare a video il mondo secondo i dati raccolti fino a quel momento. Questo è effettivamente l'elemento che esegue l'algoritmo di DF.
 
 \subsection{Knowledge Base (KB)}
-Il KB sono le informazioni che l'agente memorizza riguardo il mondo. Queste sono organizzate in una struttura a grafo, che viene riempito mano a mano che l'agente esegue i passi. Il grafo può crescere fino ad avere un numero di nodi al massimo pari al numero di passi eseguiti per raggiungere l'obiettivo. Per ottimizzare l'utilizzo di memoria, è stata aggiunta la possibilità di limitare il numero di nodi memorizzati nel grafo ad un intero N, con una perdita in termini di prestazioni variabile, ma che permette un buon compromesso, per determinati valori di N. Questo è quello che caratterizza questo problema rispetto ad algoritmi di ricerca ben noti.
+Il KB sono le informazioni che l'agente memorizza riguardo il mondo. Queste sono organizzate in una struttura a grafo, che viene riempito mano a mano che l'agente esegue i passi. Il grafo può crescere fino ad avere un numero di nodi al massimo pari al numero di passi eseguiti per raggiungere l'obiettivo. Per ottimizzare l'utilizzo di memoria, è stata aggiunta la possibilità di limitare il numero di nodi memorizzati nel grafo ad un intero N, con una perdita in termini di prestazioni variabile, ma che permette un buon compromesso, per determinati valori di N.
 
 \subsection{Gioco}
-Il gioco è la definizione della sequenza in cui svolgere le azioni per la simulazione: si inizializzano l'agente, il mondo ed il knowledge. Dopodichè, in un ciclo che finisce quando l'agente ha raggiunto l'obiettivo, o quando il valore "fuel" del Drone arriva a 0, si seleziona il Drone da un array, si chiama la funzione di probe del drone, per permettergli di misurare la propria distanza dal punto di arrivo, si assegnano a due variabili x ed y il rirultato dell'esecuzione dell'algoritmo di ricerca vero e proprio, e poi si chiama la funzione di movimento del drone con parametri queste due variabili. Alla fine del ciclo si aumenta il contatore dei passi svolti, si controlla se il drone è arrivato a destinazione, se non lo è il ciclo ricomincia, altrimenti viene annunciato il successo.
+Il gioco è la definizione della sequenza in cui svolgere le azioni per la simulazione: si inizializzano l'agente, il mondo ed il knowledge. Dopodichè, in un ciclo che finisce quando l'agente ha raggiunto l'obiettivo, o quando il valore "fuel" del Drone arriva a 0, si seleziona il Drone da un array, si chiama la funzione di probe del drone, per permettergli di misurare la propria distanza dal punto di arrivo, si assegnano a due variabili x ed y il risultato dell'esecuzione dell'algoritmo di ricerca vero e proprio, poi si chiama la funzione di movimento del drone con parametri queste due variabili. Alla fine del ciclo si aumenta il contatore dei passi svolti, si controlla se il drone è arrivato a destinazione, se non lo è il ciclo ricomincia, altrimenti viene annunciato il successo.
 
 	
 \section{Architettura software}
@@ -45,7 +45,7 @@ Il software è strutturato in maniera modulare, in modo da permettere il riutili
 Nel pacchetto Game Engine sono presenti i moduli che permettono l'utilizzo del sistema di simulazione
 
 \subsubsection{Game.py}
-Il modulo Game.py è la classe di gioco, che nel momento in cui ne viene creata un'istanza, inizializza le componenti del gioco (mondo, droni, knowledge base). All'interno è presente la funzione di gioco "start-game" in cui vengono eseguiti i passi di ogni turno di gioco. 
+Il modulo Game.py è la classe di gioco. Nel momento in cui ne viene creata un'istanza, inizializza le componenti del gioco (mondo, droni, knowledge base). All'interno è presente la funzione di gioco "start-game" in cui vengono eseguiti i passi di ogni turno di gioco. 
 \begin{verbatim}
 def start_game(self):
   i = 0
@@ -62,7 +62,7 @@ def start_game(self):
   else:
     return i
 \end{verbatim}
-Questa funzione entra in un ciclo while che finisce in due casi: se il drone arriva a destinazione, o se il valore drone.fuel è uguale a 0. Questa variabile è stata introdotta per simulare un limite pratico al numero di passi che possono essere eseguiti. All'interno del ciclo si può notare che il "drone" viene prelevato (attraverso una funzione presente nello stesso modulo) da un array. Questo per consentire la possibilità di sviluppare in seguito il gioco in maniera concorrente, facendo muovere più Droni nel mondo, e decretando vincitore il primo che raggiunge l'obiettivo. Questa funzionalità non era comunque richiesta ai fini della simulazione, quindi non è stata sviluppata. Subito dopo aver selezionato il Drone che deve fare la mossa, viene chiamata la funzione di rilevamento (probe) del valore della distanza, con parametri le coordinate della posizione attuale del drone, che riceverà dal mondo informazioni da aggiungere alla knowledge base. Viene quindi chiamata la "strategy" ovvero l'algoritmo che ritornerà il punto verso cui muoversi sotto forma di coordinate cartesiane. Una volta stabilite le coordinate, viene richiamata la funzione di movimento vera e proprio del drone, si aumenta il contatore (che rappresenterà il numero di passi eseguiti prima di uscire dal ciclo, quindi l'indice di prestazione dell'algoritmo). Infine si fa un controllo e se il "fuel" è terminato, o se il drone è giunto a destinazione, viene modificata la variabile di controllo del ciclo while e la funzione ritorna il risultato.
+Questa funzione entra in un ciclo while che finisce in due casi: se il drone arriva a destinazione, o se il valore drone.fuel è uguale a 0. Questa variabile è stata introdotta per simulare un limite pratico al numero di passi che possono essere eseguiti. All'interno del ciclo si può notare che il Drone viene prelevato (attraverso una funzione presente nello stesso modulo) da un array. Questo per consentire la possibilità di sviluppare in seguito il gioco in maniera concorrente, facendo muovere più Droni nel mondo, e decretando vincitore il primo che raggiunge l'obiettivo. Questa funzionalità non era comunque richiesta ai fini della simulazione, quindi non è stata sviluppata. Subito dopo aver selezionato il Drone che deve fare la mossa, viene chiamata la funzione di rilevamento (probe) del valore della distanza, con parametri le coordinate della posizione attuale del drone, che riceverà dal mondo informazioni da aggiungere alla knowledge base. Viene quindi chiamata la "strategy" ovvero l'algoritmo che ritorna il punto verso cui muoversi sotto forma di coordinate cartesiane. Una volta stabilite le coordinate, viene richiamata la funzione di movimento vera e proprio del drone, si aumenta il contatore (che rappresenterà il numero di passi eseguiti prima di uscire dal ciclo, quindi l'indicatore della bontà dell'algoritmo). Infine si fa un controllo e se il "fuel" è terminato, o se il drone è giunto a destinazione, viene modificata la variabile di controllo del ciclo while e la funzione ritorna il risultato.
 
 \subsubsection{Drone.py}
 Il modulo Drone.py è la classe che rappresenta l'agente. Quando viene istanziata, viene creato il grafo che rappresenta il mondo visitato dal Drone stesso, utilizzando delle funzioni presenti nel pacchetto utils. Inoltre vengono memorizzati dati che potranno essere utili per la scelta del prossimo passo. 
@@ -96,7 +96,7 @@ Inoltre è presente una classe DroneKnowledge che rappresenta un Drone con l'inf
 \subsection{Pacchetto utils}
 
 \subsubsection{Nodes.py}
-Il modulo "nodes.py" contiene la struttura dati che viene utilizzata per rappresentare il mondo visitato dal Drone sotto forma di grafo. In nodi sono definiti coe segue:
+Il modulo "nodes.py" contiene la struttura dati che viene utilizzata per rappresentare il mondo visitato dal Drone sotto forma di grafo. In nodi sono definiti come segue:
 \begin{verbatim} 
 class Node(object):
   def __init__(self, k, weight, counter):
@@ -108,7 +108,7 @@ La struttura a grafo è appunto composta di singoli nodi come sopra descritti. I
 \begin{itemize}
 \item Aggiungere un nuovo nodo se le coordinate non sono ancora presenti all'interno del grafo;
 
-\item Aggiornare un nodo se viene richiesto l'inserimento di coordinate già presenti, aumentando di 1 il valore che indica il numero di volta in cui il drone è passato sul nodo stesso, ed aggiornare il valore counter, in modo da memorizzare il fatto che questo è stato l'ultimo nodo usato
+\item Aggiornare un nodo se viene richiesto l'inserimento di coordinate già presenti, aumentando di 1 il valore che indica il numero di volte in cui il drone è passato sul nodo stesso; aggiornare il valore counter, in modo da memorizzare il fatto che questo è stato l'ultimo nodo usato
 
 \item Nel caso in cui sia stato impostato un limite alla lunghezza del grafo, eliminare il nodo usato meno di recente prima di aggiungerne uno nuovo
 \end{itemize}
@@ -161,7 +161,7 @@ d = {
 }
 \end{verbatim}
 
-Ad ogni possibile spostamento in una delle caselle adiacenti è stato assegnato un numero. Le coordinate rappresentano di quanto si debba traslare sugli assi x e y. Ad esempio quindi la direzione 0, che corrisponde a (1, 0), causerà uno spostamento di +1 sull'asse x (ovvero un passo a destra), e ogni volta che il valore chiave aumento di 1, lo vettore spostamento viene rotato di 45° in senso antiorario. Quindi la chiave di movimento 1 causerà un movimento nella casella in alto a destra ecc. Il dizionario "d" è un'ulteriore semplificazione, che permette di associare a questi numeri la direzione dello spostamento. Si accede a questi dizionari attraverso i metodi:
+Ad ogni possibile spostamento in una delle caselle adiacenti è stato assegnato un numero. Le coordinate rappresentano di quanto si debba traslare sugli assi x e y. Ad esempio quindi la direzione 0, che corrisponde a (1, 0), causerà uno spostamento di +1 sull'asse x (ovvero un passo a destra), e ogni volta che il valore chiave aumento di 1, il vettore spostamento viene rotato di 45° in senso antiorario. Quindi la chiave di movimento 1 causerà un movimento nella casella in alto a destra ecc. Il dizionario "d" è un'ulteriore semplificazione, che permette di associare a questi numeri la direzione dello spostamento. Si accede a questi dizionari attraverso i metodi:
 \begin{verbatim}
 def get_direction(x_mod, y_mod):
   return get_directions[x_mod, y_mod]
@@ -185,15 +185,18 @@ La seconda fase consiste nel muoversi nella parte di piano in cui si trova la so
 Durante la fase di calibrazione, l'agente si sposta quindi per prima cosa sul piano orizzontale (in direzione Est), e salva le due misurazioni fatte (nel punto di partenza e subito dopo il movimento). Dopodichè il drone si muove sul piano verticale (in direzione Nord): 
 \begin{verbatim}
 if STEP <= 2:
-    direction = d["E"] if STEP == 1 else d["N"] if STEP == 2 else drone.last_direction
+    direction = d["E"] if STEP == 1 else d["N"] if STEP == 2 \
+    else drone.last_direction
     return void_directions(direction, drone)
 \end{verbatim}
 Una volta raccolte le tre misurazioni, queste vengono comparate per escludere le porzioni di piano in cui sicuramente non si trova la sorgente:
 \begin{verbatim}
 elif STEP == 3:
     sud_ovest, sud_est, nord_est = distances[:3]
-    direction = "S" if sud_est < nord_est else "N" if sud_est > nord_est else ""
-    direction += "E" if sud_ovest > sud_est else "O" if sud_ovest < sud_est else ""
+    direction = "S" if sud_est < nord_est else "N" \
+    if sud_est > nord_est else ""
+    direction += "E" if sud_ovest > sud_est else "O" \
+    if sud_ovest < sud_est else ""
     drone.last_direction = d[direction]
 return go_far(drone)
 \end{verbatim}
