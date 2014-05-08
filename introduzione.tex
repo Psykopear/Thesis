@@ -1,21 +1,21 @@
 \chapter*{Introduzione}
-Lo sviluppo e la costante diffusione di tecnologie di comunicazione wireless aprono nuove frontiere per la progettazione e la realizzazione di dispositivi in grado di sfruttare questa potenzialità. Basti pensare ai sistemi di geolocalizzazione presenti negli smartphone che permettono di avere informazioni riferite al luogo in cui ci si trova in tempo reale, o ai navigatori gps, già in largo uso da diversi anni. Questa evoluzione è andata di pari passo all'evoluzione di tecniche di "context awereness" ovvero alla capacità dei dispositivi di riconoscere il tipo di ambiente in cui si trovano, attraverso l'analisi di dati provenienti da sensori per poi comportarsi di conseguenza. 
+Lo sviluppo e la costante diffusione di tecnologie di comunicazione wireless aprono nuove frontiere per la progettazione e la realizzazione di dispositivi connessi fra di loro. Basti pensare ai sistemi di geolocalizzazione presenti negli smartphone che permettono di avere informazioni riferite al luogo in cui ci si trova in tempo reale, o ai navigatori gps, già in largo uso da diversi anni. Questa evoluzione è andata di pari passo con nuove tecniche di "context awereness" che hanno permesso ai dispositivi di riconoscere il tipo di ambiente in cui si trovano, attraverso l'analisi di dati provenienti da sensori così da reagire di conseguenza. 
 
-Ad esempio uno smartphone che sia cosciente del contesto in cui si trova, potrebbe sapere di trovarsi in una stanza dove è in corso una riunione e rifiutare una chiamata in arrivo. In ambito medico un dispositivo può visualizzare a schermo i dati del paziente di fronte a cui ci si trova, presentare i compiti da svolgere in una determinata zona dell'ospedale e permettere di inserire o aggiornare questi dati. 
+Ad esempio uno smartphone "cosciente" del contesto in cui si trova, potrebbe riconoscere una stanza dove è in corso una riunione e rifiutare una chiamata in arrivo. Questa funzionalità può essere estesa anche in ambito medico, dove un dispositivo può visualizzare a schermo i dati del paziente, oppure presentare i compiti da svolgere in una determinata zona dell'ospedale così da permettere di inserire o aggiornare questi dati. 
 
-Altro possibile sviluppo, visto il crescente interessi nei confronti di questi mezzi, è permettere ad un drone\footnote{aeromobile multirotore in grado di muoversi autonomamente, senza bisogno di controlli dall'esterno} di decollare da un punto e raggiungere un dispositivo bluetooth messo ad una certa distanza, atterrando nelle sue vicinanze. 
+Un altro possibile scenario, visto il crescente interessi nei confronti di questi mezzi, riguarda i droni\footnote{aeromobile multirotore in grado di muoversi autonomamente, senza bisogno di controlli dall'esterno}. Ad esempio questi possono essere utilizzati per raggiungere parti del mondo in cui le strade non sono utilizzabili se non in brevi periodi dell'anno, per portare cibo medicinali e beni di prima necessità. Come propone Andreas Raptopoulos durante la conferenza TED Global di giugno 2013
+\footnote{ \url{http://www.ted.com/talks/andreas_raptopoulos_no_roads_there_s_a_drone_for_that} }, sviluppare un network di basi di atterraggio e ricarica per droni che copra una vasta superficie geografica è molto più economico, veloce, ed ecocompatibile della costruzione e manutenzione di arterie stradali o ferroviarie.
 
-Nel nostro lavoro di tesi si è riprodotto proprio questo problema, attraverso un software che simula questa situazione. È stato scelto di utilizzare il linguaggio di programmazione Python, già utilizzato in altri progetti che sviluppano tecniche di context-awareness.
+Nel nostro lavoro di tesi si è riprodotto proprio quest'ultimo problema, attraverso un software che simula questa situazione. È stato scelto di utilizzare il linguaggio di programmazione Python, già utilizzato in altri progetti che sviluppano tecniche di context-awareness.
 
-È stato quindi creato un sistema di gioco, all'interno del quale fosse possibile sviluppare l'algoritmo, e studiarne il comportamento nelle diverse situazioni. 
-
-Per analizzare il comportamento dell'algoritmo in ogni possibile situazione è stato quindi sviluppato un software di benchmark che permettesse di valutare la bontà dell'algoritmo in maniera sistematica.
+È stato creato un sistema di gioco all'interno del quale fosse possibile sviluppare l'algoritmo di controllo del drone che permettesse di calcolare il percorso da fare per raggiungere un punto nello spazio. Per analizzarne il comportamento è stato sviluppato un software di benchmark che permettesse di valutarne la bontà in maniera sistematica, simulando quante più configurazioni possibili.
 
 Durante tutto questo processo è stato svolto un lavoro di ricerca che ha permesso di inquadrare la tipologia del problema.
 
-Nel primo capitolo verrà quindi introdotto il concetto di direction finding, e vengono spiegati i diversi utilizzi e tecniche impiegati. 
+Nel primo capitolo sarà introdotto il concetto di direction finding e saranno spiegate le diverse tecniche impiegate per risolvere il problema. 
 
-Nel secondo capitolo si affronta il problema dal punto di vista del "positioning", ovvero la localizzazione di un punto in uno spazio geografico. 
-Nel terzo capitolo viene analizzato invece tutto il lavoro svolto nella fase di scrittura del codice, evidenziandone le parti più importanti, entrando anche nel dettaglio dell'implementazione. 
+Nel secondo capitolo si affronta il problema dal punto di vista del "positioning", ovvero della localizzazione di un punto in uno spazio geografico. 
 
-Il quarto capitolo contiene i risultati avuti dalla suite di benchmark, e le riflessioni riguardo i risultati ottenuti.
+Nel terzo capitolo viene analizzato tutto il lavoro svolto nella fase di implementazione, evidenziandone le parti più importanti, entrando anche nel dettaglio delle varie componenti create.
+
+Il quarto capitolo contiene i risultati della suite di benchmark, e le conseguenti riflessioni.
