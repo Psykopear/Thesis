@@ -98,14 +98,12 @@ Anno Accademico \annoaccademico
 %Voglio ringraziare ....
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \tableofcontents
-\listoffigures
 \pagenumbering{arabic}
 %%%% fine prologo
 %%%% Inizio corpo tesi
 \pagestyle{fancy}
 \fancyhead[RO]{\bfseries Introduzione}
 \fancyfoot[LE,RO]{\thepage \hfil}
-\addcontentsline{toc}{chapter}{Introduzione}
 \input{introduzione}        %Il testo delkl'introduzione e' in un file esterno: "introduzione.tex"
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -121,7 +119,7 @@ Anno Accademico \annoaccademico
 
 
 %%% .....
-%%%%%%%%%%%% CONCLUSIONI   (non numerate come per l'introduzione)
+%%%%%%%%%%%% CONCLUSIONI   (non numerate come per l'introduzione) 
 \addcontentsline{toc}{chapter}{Conclusioni}
 \fancyhead[RO]{\bfseries Conclusioni}
 \input{conclusioni}
@@ -131,7 +129,8 @@ Anno Accademico \annoaccademico
 \input{bibliografia}     %conterra' una serie di istruzioni del tipo:    
                          % \bibitem{eol} O. Gervasi and A. Lagan‡ "EOL: A Web-Based Distance Assessment System", 
 			 % Lecture Notes in Computer Science, 3044, Springer & Verlag, pp. 854-862 (2004)
-
+\addcontentsline{toc}{chapter}{Elenco delle immagini}
+\listoffigures
 %%%% APPENDICE CON IL CODICE SVILUPPATO
 \appendix
 \linespread{1}

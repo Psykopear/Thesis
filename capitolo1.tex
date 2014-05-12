@@ -25,7 +25,7 @@ La localizzazione delle emittenti è di solito un processo suddiviso in diverse 
 
 In letteratura è presente un vasto assortimento di algoritmi e sistemi per la soluzione di problemi di DF.
 
-I sistemi di "radio direction finding" utilizzano una seria di antenne e una o più riceventi o per stimare un angolo di rilevamento o per determinare le coordinate geografiche di un segnale ricevuto (SOI\footnote{SOI: Signal Of Interest}). La funzione primaria di un sistema di DF è quella di calcolare la direzione di arrivo (DOA\footnote{DOA: Direction Of Arrival}). 
+I sistemi di ""radio direction finding'' utilizzano una seria di antenne e una o più riceventi o per stimare un angolo di rilevamento o per determinare le coordinate geografiche di un segnale ricevuto (SOI\footnote{SOI: Signal Of Interest}). La funzione primaria di un sistema di DF è quella di calcolare la direzione di arrivo (DOA\footnote{DOA: Direction Of Arrival}). 
 
 Gli algoritmi di DF sono di solito divisi in due categorie: sistemi di DF ad n canali, che utilizzano un canale della ricevente per ogni antenna; sistemi di DF a canale singolo, che utilizzano una singola antenna, una serie di trasmettitrici e un sistema che permetta di passare da un segnale all'altro, o che combini i segnali in modo da poterli presentare alla ricevente come un segnale singolo. 
 
@@ -41,25 +41,25 @@ I sistemi basati sulla fase del segnale determinano le informazioni necessarie a
 
 I sistemi che utilizzano entrambi i sistemi sono più complessi, ma in generale hanno prestazioni migliori.
 
-\subsubsection{Sistemi a Tempo Di Arrivo (TOA)}
+\subsubsection{Sistemi a Tempo di Arrivo (TOA)}
 
 Il tempo di arrivo di un segnale che viagga da un nodo all'altro può essere utilizzato per stimare la distanza fra i due nodi. Se i due nodi sono sincronizzati, la ricevente può determinare il ToA del segnale. La sincronizzazione fra i due nodi è un punto fondamentale in questo tipo di tecnica e da questa, in genere, dipendono le prestazioni del sistema nel complesso. Per effettuare la stima della posizione sono necessari almeno 3 nodi.
 
-\subsubsection{Sistemi a Direzione di Arrivo (DOA)}
+\subsubsection{Sistemi a fase di segnale }
 
-I sistemi basati sulla direzione di arrivo utilizzano di solito stazioni ad antenna multipla. Questi sistemi sono interessanti in quanto, a differenza di altri, non hanno bisogno di una sincronizzazione fra le stazioni, e sono sufficienti due stazioni base per permettere	di effettuare la localizzazione. 
+I sistemi basati sulla fase del segnale determinano la direzione di arrivo utilizzando informazioni sulla fase assoluta, o la differenza di fase, dei segnali ricevuti dalle antenne. Sono di solito utilizzate stazioni ad antenna multipla. Questi sistemi sono interessanti in quanto, a differenza di altri, non hanno bisogno di una sincronizzazione fra le stazioni, e sono sufficienti due stazioni base per permettere	di effettuare la localizzazione. 
 
 Ci sono molte soluzioni basate su questo approccio sviluppate negli ultimi quranta anni. Il MUSIC\footnote{Acronimo di MUltiple SIgnal Classification, si tratta di una tecnica per la stima di frequenza e per la localizzazione della direzione di provenienza di un segnale (DOA).}, l'ESPIRT\footnote{Acronimo per Estimation of Signal Parameters via Rotational Invariant Techniques (ESPRIT) è una tecnica per determinare dei parametri di un insieme di sinusoidi immerse in del rumore di fondo.} e le rispettive varianti, sono le più utilizzate in tempi recenti. Questi, pur essendo subottimali, forniscono delle ottime prestazioni e sono di solito considerati algoritmi di riferimento in questo ambito.
 
 \subsubsection{Sistemi Received Signal Strenght (RSS)}
-Queste tecniche si basano sull'idea che la potenza del segnale varia con la distanza. In questo modo la RSS inviata alla ricevente dà informazioni riguardo la distanza di questa dalla sorgente. In ogni caso è necessario stabilire una scala che permetta di convertire la differenza di potenza del segnale ricevuto (PL\footnote{PL: Path Loss}) in una distanza. Un modello comune per la PL chiamato "log-normal shadowing PL model" è dato da:
+Queste tecniche si basano sull'idea che la potenza del segnale varia con la distanza. In questo modo la RSS inviata alla ricevente dà informazioni riguardo la distanza di questa dalla sorgente. In ogni caso è necessario stabilire una scala che permetta di convertire la differenza di potenza del segnale ricevuto (PL\footnote{PL: Path Loss}) in una distanza. Un modello comune per la PL chiamato ""log-normal shadowing PL model'' è dato da:
  $$ PL\left(d\right) = PL\left(d_0\right) + 10n_plog_{10} \left( \frac{d}{d_0} \right) + v $$
 dove:
 \begin{itemize}
 \item $ PL(d) $ è il PL in dB alla distanza d; 
 \item $ PL(d_0) $ è il PL in dB ad una distanza relativamente breve $ d_0 < d $ ($ d_{0} $ di solito è un metro); 
-\item $n_p$ è quello che è chiamato "path loss exponent". I valori di $n_p$ più comunemente utilizzati possono andare da 2 in campo aperto, o 4-6 in caso di utilizzo in un percorso ostruito da muri.
-\item $v$ è una variabile gaussiana casuale che rappresenta l'effetto del "log normal shadowing". Solitamente questa variabile $v$ è considerata zero. 
+\item $n_p$ è quello che è chiamato ""path loss exponent''. I valori di $n_p$ più comunemente utilizzati possono andare da 2 in campo aperto, o 4-6 in caso di utilizzo in un percorso ostruito da muri.
+\item $v$ è una variabile gaussiana casuale che rappresenta l'effetto del ""log normal shadowing''. Solitamente questa variabile $v$ è considerata zero. 
 \end{itemize}
 Questo modello può essere utilizzato sia per utilizzi interni che all'aria aperta. 
 
